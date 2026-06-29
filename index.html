@@ -376,17 +376,28 @@
     }
 
     .tr-change td {
-      background: #fffdf5;
-      color: #555;
+      background: #1a1a1a;
+      color: #fff;
       font-size: 0.8rem;
-      border-bottom: 1px solid #f0ead0;
+      border-bottom: 1px solid #333;
       padding: 8px 14px;
     }
 
     .td-change-time {
-      color: #aaa !important;
+      color: #888 !important;
       font-size: 0.75rem !important;
       font-weight: 400 !important;
+    }
+
+    .sched-table td[contenteditable]:focus {
+      outline: 2px solid #4a7ef5;
+      outline-offset: -2px;
+      border-radius: 3px;
+      background-color: #f8faff !important;
+    }
+
+    .tr-change td[contenteditable]:focus {
+      background-color: #2a2a2a !important;
     }
 
     .tr-s4 td { border-left: 3px solid #1a1a1a; }
@@ -607,11 +618,11 @@
 </head>
 <body>
 
-  <h1>Shoot Day</h1>
+  <h1>Social Skits Ahrefs</h1>
 
   <div class="tab-bar">
-    <button class="tab active" onclick="switchTab('checklist')">Checklist</button>
-    <button class="tab" onclick="switchTab('schedule')">Schedule</button>
+    <button class="tab active" onclick="switchTab('checklist')">Props Checklist</button>
+    <button class="tab" onclick="switchTab('schedule')">Shoot Schedule</button>
   </div>
 
   <!-- CHECKLIST VIEW -->
@@ -897,8 +908,6 @@
   <!-- SCHEDULE VIEW -->
   <div id="view-schedule" style="display:none">
 
-    <div class="schedule-note">11 character passes · one actor · one camera operator (same person). Film the full script as each character, then change costume and repeat. Button-up shirt carries Scripts 4→1. Blazer carries Scripts 2→3.</div>
-
     <div class="tbl-wrap">
     <table class="sched-table">
       <thead>
@@ -915,7 +924,7 @@
 
         <!-- SETUP -->
         <tr class="tr-setup">
-          <td class="td-time">9:00<span>30 min</span></td>
+          <td class="td-time" contenteditable="true">9:00<span>30 min</span></td>
           <td colspan="5"><strong>Setup & Prep</strong> — Build Interrogation set first (darkest, most lighting work). Position table centre frame, clamp swing lamp overhead, place laptop + folder on table. Frame camera: medium shot, slightly below eyeline, across table. Lock off tripod.</td>
         </tr>
 
@@ -1224,6 +1233,11 @@
     }
 
     loadState();
+
+    // Make all schedule table cells editable
+    document.querySelectorAll('.sched-table td').forEach(td => {
+      td.setAttribute('contenteditable', 'true');
+    });
 
     function switchTab(tab) {
       document.getElementById('view-checklist').style.display = tab === 'checklist' ? 'block' : 'none';
