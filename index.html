@@ -255,6 +255,154 @@
       font-weight: 400;
     }
 
+    /* Tabs */
+    .tab-bar {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 28px;
+    }
+
+    .tab {
+      background: none;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 8px 20px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: #888;
+      transition: all 0.15s;
+    }
+
+    .tab:hover { background: #f0f0ee; }
+
+    .tab.active {
+      background: #1a1a1a;
+      color: #fff;
+      border-color: #1a1a1a;
+    }
+
+    /* Schedule */
+    .schedule-note {
+      font-size: 0.82rem;
+      color: #aaa;
+      margin-bottom: 24px;
+      padding: 10px 14px;
+      background: #fff;
+      border-radius: 8px;
+      border-left: 3px solid #e0e0dc;
+    }
+
+    .sched-block {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 10px;
+    }
+
+    .sched-time-col {
+      width: 64px;
+      min-width: 64px;
+      text-align: right;
+      padding-top: 14px;
+    }
+
+    .sched-time {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+
+    .sched-duration {
+      font-size: 0.72rem;
+      color: #bbb;
+      margin-top: 2px;
+    }
+
+    .sched-content {
+      flex: 1;
+      background: #fff;
+      border-radius: 10px;
+      padding: 14px 18px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+
+    .sched-content.setup-block {
+      background: #f7f7f5;
+      box-shadow: none;
+    }
+
+    .sched-script-tag {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #bbb;
+      margin-bottom: 4px;
+    }
+
+    .sched-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 4px;
+    }
+
+    .sched-detail {
+      font-size: 0.82rem;
+      color: #888;
+      margin-bottom: 6px;
+    }
+
+    .sched-wardrobe {
+      font-size: 0.8rem;
+      color: #555;
+      background: #f5f5f0;
+      border-radius: 6px;
+      padding: 6px 10px;
+      margin-top: 6px;
+    }
+
+    .sched-change {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.75rem;
+      color: #bbb;
+      padding: 4px 0 4px 80px;
+      margin-bottom: 6px;
+    }
+
+    .sched-change::before {
+      content: '';
+      display: block;
+      width: 20px;
+      height: 1px;
+      background: #ddd;
+      flex-shrink: 0;
+    }
+
+    .sched-script-divider {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: #fff;
+      background: #1a1a1a;
+      border-radius: 6px;
+      padding: 5px 12px;
+      margin: 14px 0 8px 80px;
+      display: inline-block;
+    }
+
+    .sched-pass-tag {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #bbb;
+      margin-bottom: 3px;
+    }
+
     /* Notes section */
     .notes-section {
       margin-bottom: 18px;
@@ -297,9 +445,15 @@
 </head>
 <body>
 
-  <h1>Shoot Day Checklist</h1>
-  <p class="subtitle">5 scripts · props & wardrobe</p>
+  <h1>Shoot Day</h1>
 
+  <div class="tab-bar">
+    <button class="tab active" onclick="switchTab('checklist')">Checklist</button>
+    <button class="tab" onclick="switchTab('schedule')">Schedule</button>
+  </div>
+
+  <!-- CHECKLIST VIEW -->
+  <div id="view-checklist">
   <div class="global-actions">
     <button class="global-btn" onclick="checkAll()">Check all</button>
     <button class="global-btn outline" onclick="resetAll()">Reset all</button>
@@ -576,6 +730,174 @@
     </div>
   </div>
 
+  </div><!-- end view-checklist -->
+
+  <!-- SCHEDULE VIEW -->
+  <div id="view-schedule" style="display:none">
+
+    <div class="schedule-note">One actor, one camera angle per character. Each script filmed in full per character pass, then costume change. Ordered to minimise changes — button-up shirt carries across Scripts 4→1, blazer carries across Scripts 2→3.</div>
+
+    <!-- SETUP -->
+    <div class="sched-block">
+      <div class="sched-time-col"><div class="sched-time">9:00</div><div class="sched-duration">30 min</div></div>
+      <div class="sched-content setup-block">
+        <div class="sched-title">Setup & Prep</div>
+        <div class="sched-detail">Camera, lighting, Interrogation set (table, lamp, laptop)</div>
+      </div>
+    </div>
+
+    <!-- SCRIPT 4 -->
+    <div class="sched-script-divider">Script 4 — Interrogation</div>
+
+    <div class="sched-block">
+      <div class="sched-time-col"><div class="sched-time">9:30</div><div class="sched-duration">20 min</div></div>
+      <div class="sched-content">
+        <div class="sched-pass-tag">Pass 1 of 1</div>
+        <div class="sched-title">Detective</div>
+        <div class="sched-wardrobe">👔 Button-up, sleeves rolled, loosened tie</div>
+      </div>
+    </div>
+
+    <div class="sched-change">remove tie · keep button-up · reframe camera for talking heads</div>
+
+    <!-- SCRIPT 1 -->
+    <div class="sched-script-divider">Script 1 — AEO vs SEO Expert</div>
+
+    <div class="sched-block">
+      <div class="sched-time-col"><div class="sched-time">9:55</div><div class="sched-duration">20 min</div></div>
+      <div class="sched-content">
+        <div class="sched-pass-tag">Pass 1 of 2</div>
+        <div class="sched-title">SEO Expert</div>
+        <div class="sched-wardrobe">👔 Button-up (same shirt, no tie)</div>
+      </div>
+    </div>
+
+    <div class="sched-change">costume change · hoodie + lanyard</div>
+
+    <div class="sched-block">
+      <div class="sched-time-col"><div class="sched-time">10:20</div><div class="sched-duration">20 min</div></div>
+      <div class="sched-content">
+        <div class="sched-pass-tag">Pass 2 of 2</div>
+        <div class="sched-title">AEO Expert</div>
+        <div class="sched-wardrobe">👕 Hoodie or patterned shirt + lanyard</div>
+      </div>
+    </div>
+
+    <div class="sched-change">set up chairs circle · hang banner · snack table · keep casual outfit</div>
+
+    <!-- SCRIPT 5 -->
+    <div class="sched-script-divider">Script 5 — AEO Anonymous</div>
+
+    <div class="sched-block">
+      <div class="sched-time-col"><div class="sched-time">10:45</div><div class="sched-duration">20 min</div></div>
+      <div class="sched-content">
+        <div class="sched-pass-tag">Pass 1 of 3</div>
+        <div class="sched-title">Facilitator</div>
+        <div class="sched-wardrobe">👕 Casual worn-in layers (fleece or hoodie)</div>
+      </div>
+    </div>
+
+    <div class="sched-change">costume change · business casual</div>
+
+    <div class="sched-block">
+      <div class="sched-time-col"><div class="sched-time">11:10</div><div class="sched-duration">20 min</div></div>
+      <div class="sched-content">
+        <div class="sched-pass-tag">Pass 2 of 3</div>
+        <div class="sched-title">Members</div>
+        <div class="sched-wardrobe">👔 Business casual (film each member look separately if needed)</div>
+      </div>
+    </div>
+
+    <div class="sched-change">costume change · regular clothes</div>
+
+    <div class="sched-block">
+      <div class="sched-time-col"><div class="sched-time">11:35</div><div class="sched-duration">15 min</div></div>
+      <div class="sched-content">
+        <div class="sched-pass-tag">Pass 3 of 3</div>
+        <div class="sched-title">New Guy</div>
+        <div class="sched-wardrobe">👕 Regular clothes, no costume</div>
+      </div>
+    </div>
+
+    <!-- LUNCH -->
+    <div class="sched-block">
+      <div class="sched-time-col"><div class="sched-time">12:00</div><div class="sched-duration">60 min</div></div>
+      <div class="sched-content setup-block">
+        <div class="sched-title">Lunch</div>
+        <div class="sched-detail">Set up conference table, tarot cards, crystal ball during break</div>
+      </div>
+    </div>
+
+    <!-- SCRIPT 2 -->
+    <div class="sched-script-divider">Script 2 — The Oracle</div>
+
+    <div class="sched-block">
+      <div class="sched-time-col"><div class="sched-time">13:00</div><div class="sched-duration">20 min</div></div>
+      <div class="sched-content">
+        <div class="sched-pass-tag">Pass 1 of 2</div>
+        <div class="sched-title">Oracle</div>
+        <div class="sched-wardrobe">🧥 Dark cowl or draped robe</div>
+      </div>
+    </div>
+
+    <div class="sched-change">costume change · blazer (carry into Script 3)</div>
+
+    <div class="sched-block">
+      <div class="sched-time-col"><div class="sched-time">13:25</div><div class="sched-duration">20 min</div></div>
+      <div class="sched-content">
+        <div class="sched-pass-tag">Pass 2 of 2</div>
+        <div class="sched-title">Client</div>
+        <div class="sched-wardrobe">🧥 Blazer + notebook</div>
+      </div>
+    </div>
+
+    <div class="sched-change">set up couch/chairs · keep blazer for Therapist</div>
+
+    <!-- SCRIPT 3 -->
+    <div class="sched-script-divider">Script 3 — Couple Therapy</div>
+
+    <div class="sched-block">
+      <div class="sched-time-col"><div class="sched-time">13:50</div><div class="sched-duration">20 min</div></div>
+      <div class="sched-content">
+        <div class="sched-pass-tag">Pass 1 of 3</div>
+        <div class="sched-title">Therapist</div>
+        <div class="sched-wardrobe">🧥 Soft blazer or cardigan (same blazer from Client)</div>
+      </div>
+    </div>
+
+    <div class="sched-change">costume change · logo tee</div>
+
+    <div class="sched-block">
+      <div class="sched-time-col"><div class="sched-time">14:15</div><div class="sched-duration">20 min</div></div>
+      <div class="sched-content">
+        <div class="sched-pass-tag">Pass 2 of 3</div>
+        <div class="sched-title">The Brand</div>
+        <div class="sched-wardrobe">👕 Company logo t-shirt</div>
+      </div>
+    </div>
+
+    <div class="sched-change">costume change · all gray / neutral</div>
+
+    <div class="sched-block">
+      <div class="sched-time-col"><div class="sched-time">14:40</div><div class="sched-duration">20 min</div></div>
+      <div class="sched-content">
+        <div class="sched-pass-tag">Pass 3 of 3</div>
+        <div class="sched-title">ChatGPT</div>
+        <div class="sched-wardrobe">🩶 All-gray or plain neutral outfit</div>
+      </div>
+    </div>
+
+    <!-- WRAP -->
+    <div class="sched-block">
+      <div class="sched-time-col"><div class="sched-time">15:05</div><div class="sched-duration">55 min</div></div>
+      <div class="sched-content setup-block">
+        <div class="sched-title">Pickups & Buffer</div>
+        <div class="sched-detail">Any reshoots, alternative takes, pack down — done by 16:00</div>
+      </div>
+    </div>
+
+  </div><!-- end view-schedule -->
+
   <script>
     // Build link inputs for every .link-col
     document.querySelectorAll('.link-col').forEach(col => {
@@ -708,6 +1030,13 @@
     }
 
     loadState();
+
+    function switchTab(tab) {
+      document.getElementById('view-checklist').style.display = tab === 'checklist' ? 'block' : 'none';
+      document.getElementById('view-schedule').style.display = tab === 'schedule' ? 'block' : 'none';
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+    }
   </script>
 </body>
 </html>
