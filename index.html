@@ -254,6 +254,45 @@
       border: 1px solid #ddd;
       font-weight: 400;
     }
+
+    /* Notes section */
+    .notes-section {
+      margin-bottom: 18px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #f0f0ee;
+    }
+
+    .notes-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #bbb;
+      margin-bottom: 6px;
+    }
+
+    .notes-textarea {
+      width: 100%;
+      min-height: 60px;
+      border: 1px solid #ebebE8;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 0.88rem;
+      font-family: inherit;
+      color: #333;
+      background: #fafaf8;
+      resize: vertical;
+      outline: none;
+      line-height: 1.5;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .notes-textarea::placeholder { color: #ccc; }
+
+    .notes-textarea:focus {
+      border-color: #bbb;
+      background: #fff;
+    }
   </style>
 </head>
 <body>
@@ -274,6 +313,11 @@
         <div class="script-subtitle">Talking heads format</div>
       </div>
       <div class="progress-pill" id="pill-1">0 / 4</div>
+    </div>
+
+    <div class="notes-section">
+      <div class="notes-label">Notes</div>
+      <textarea class="notes-textarea" placeholder="Add notes for this script..."></textarea>
     </div>
 
     <div class="section-label">Wardrobe</div>
@@ -307,7 +351,12 @@
         <div class="script-title">Script 2 — The Oracle</div>
         <div class="script-subtitle">Conference room · candles · tarot</div>
       </div>
-      <div class="progress-pill" id="pill-2">0 / 9</div>
+      <div class="progress-pill" id="pill-2">0 / 8</div>
+    </div>
+
+    <div class="notes-section">
+      <div class="notes-label">Notes</div>
+      <textarea class="notes-textarea" placeholder="Add notes for this script..."></textarea>
     </div>
 
     <div class="section-label">Props</div>
@@ -325,11 +374,6 @@
     <div class="item">
       <div class="check-box" onclick="toggleCheck(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       <span class="item-label" contenteditable="true">Tarot card — Death</span>
-      <div class="link-col"></div>
-    </div>
-    <div class="item">
-      <div class="check-box" onclick="toggleCheck(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <span class="item-label" contenteditable="true">Candles (multiple, for table)</span>
       <div class="link-col"></div>
     </div>
     <div class="item">
@@ -371,6 +415,11 @@
         <div class="script-subtitle">Couch · clipboard · three characters</div>
       </div>
       <div class="progress-pill" id="pill-3">0 / 7</div>
+    </div>
+
+    <div class="notes-section">
+      <div class="notes-label">Notes</div>
+      <textarea class="notes-textarea" placeholder="Add notes for this script..."></textarea>
     </div>
 
     <div class="section-label">Props</div>
@@ -426,6 +475,11 @@
       <div class="progress-pill" id="pill-4">0 / 5</div>
     </div>
 
+    <div class="notes-section">
+      <div class="notes-label">Notes</div>
+      <textarea class="notes-textarea" placeholder="Add notes for this script..."></textarea>
+    </div>
+
     <div class="section-label">Props</div>
     <div class="col-headers"><span class="col-h-item">Item</span><span class="col-h-link">Link / Reference</span></div>
     <div class="item">
@@ -467,6 +521,11 @@
         <div class="script-subtitle">Circle of chairs · support group vibes</div>
       </div>
       <div class="progress-pill" id="pill-5">0 / 8</div>
+    </div>
+
+    <div class="notes-section">
+      <div class="notes-label">Notes</div>
+      <textarea class="notes-textarea" placeholder="Add notes for this script..."></textarea>
     </div>
 
     <div class="section-label">Props</div>
@@ -597,6 +656,11 @@
       label.addEventListener('input', () => saveState());
     });
 
+    // Save notes on input
+    document.querySelectorAll('.notes-textarea').forEach(ta => {
+      ta.addEventListener('input', () => saveState());
+    });
+
     function saveState() {
       const state = [];
       document.querySelectorAll('.item').forEach(item => {
@@ -608,7 +672,12 @@
           link: input ? input.value : ''
         });
       });
-      try { localStorage.setItem('shoot_checklist_v2', JSON.stringify(state)); } catch(e) {}
+      const notes = [];
+      document.querySelectorAll('.notes-textarea').forEach(ta => notes.push(ta.value));
+      try {
+        localStorage.setItem('shoot_checklist_v2', JSON.stringify(state));
+        localStorage.setItem('shoot_checklist_notes', JSON.stringify(notes));
+      } catch(e) {}
     }
 
     function loadState() {
@@ -629,6 +698,10 @@
             linkGo.classList.add('visible');
             input.classList.add('has-link');
           }
+        });
+        const notes = JSON.parse(localStorage.getItem('shoot_checklist_notes') || '[]');
+        document.querySelectorAll('.notes-textarea').forEach((ta, i) => {
+          if (notes[i]) ta.value = notes[i];
         });
       } catch(e) {}
       [1,2,3,4,5].forEach(updatePill);
