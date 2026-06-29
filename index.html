@@ -349,27 +349,70 @@
 
     .sched-detail {
       font-size: 0.82rem;
-      color: #888;
+      color: #444;
       margin-bottom: 6px;
+      line-height: 1.5;
     }
 
-    .sched-wardrobe {
-      font-size: 0.8rem;
-      color: #555;
-      background: #f5f5f0;
-      border-radius: 6px;
-      padding: 6px 10px;
-      margin-top: 6px;
+    .sched-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+
+    .sched-tag {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 5px;
+      line-height: 1.4;
+    }
+
+    .sched-tag.costume {
+      background: #f0eef8;
+      color: #5a4a8a;
+    }
+
+    .sched-tag.camera {
+      background: #eef4ff;
+      color: #2a52a0;
+    }
+
+    .sched-tag.props {
+      background: #f0f8ee;
+      color: #2a6a2a;
+    }
+
+    .sched-perf {
+      font-size: 0.82rem;
+      color: #333;
+      background: #fafaf7;
+      border-left: 3px solid #e0e0dc;
+      padding: 8px 12px;
+      margin-top: 8px;
+      border-radius: 0 6px 6px 0;
+      line-height: 1.5;
+    }
+
+    .sched-perf strong {
+      color: #1a1a1a;
+      display: block;
+      margin-bottom: 2px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
     }
 
     .sched-change {
       display: flex;
       align-items: center;
       gap: 8px;
-      font-size: 0.75rem;
-      color: #bbb;
-      padding: 4px 0 4px 80px;
-      margin-bottom: 6px;
+      font-size: 0.78rem;
+      color: #555;
+      padding: 6px 0 6px 80px;
+      margin-bottom: 4px;
+      font-weight: 500;
     }
 
     .sched-change::before {
@@ -377,20 +420,20 @@
       display: block;
       width: 20px;
       height: 1px;
-      background: #ddd;
+      background: #bbb;
       flex-shrink: 0;
     }
 
     .sched-script-divider {
-      font-size: 0.72rem;
+      font-size: 0.75rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.09em;
       color: #fff;
       background: #1a1a1a;
       border-radius: 6px;
-      padding: 5px 12px;
-      margin: 14px 0 8px 80px;
+      padding: 6px 14px;
+      margin: 18px 0 10px 80px;
       display: inline-block;
     }
 
@@ -399,8 +442,14 @@
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.08em;
-      color: #bbb;
+      color: #777;
       margin-bottom: 3px;
+    }
+
+    .sched-duration {
+      font-size: 0.72rem;
+      color: #666;
+      margin-top: 2px;
     }
 
     /* Notes section */
@@ -735,164 +784,213 @@
   <!-- SCHEDULE VIEW -->
   <div id="view-schedule" style="display:none">
 
-    <div class="schedule-note">One actor, one camera angle per character. Each script filmed in full per character pass, then costume change. Ordered to minimise changes — button-up shirt carries across Scripts 4→1, blazer carries across Scripts 2→3.</div>
+    <div class="schedule-note">11 character passes across the day. One static camera angle per character — film the full script, then change costume and repeat. Ordered to minimise costume changes: button-up carries Scripts 4→1, blazer carries Scripts 2→3. Lunch doubles as set-change time.</div>
 
     <!-- SETUP -->
     <div class="sched-block">
       <div class="sched-time-col"><div class="sched-time">9:00</div><div class="sched-duration">30 min</div></div>
       <div class="sched-content setup-block">
         <div class="sched-title">Setup & Prep</div>
-        <div class="sched-detail">Camera, lighting, Interrogation set (table, lamp, laptop)</div>
+        <div class="sched-detail">Build the Interrogation set first — it's the darkest and needs the most lighting work. Position table centre frame, hang or clamp the swing lamp overhead. Place laptop (closed) and manila folder on the table. Frame camera: medium shot, slightly below eyeline, across the table. Lock off tripod.</div>
       </div>
     </div>
 
     <!-- SCRIPT 4 -->
-    <div class="sched-script-divider">Script 4 — Interrogation</div>
+    <div class="sched-script-divider">Script 4 — Interrogation · 1 pass</div>
 
     <div class="sched-block">
-      <div class="sched-time-col"><div class="sched-time">9:30</div><div class="sched-duration">20 min</div></div>
+      <div class="sched-time-col"><div class="sched-time">9:30</div><div class="sched-duration">25 min</div></div>
       <div class="sched-content">
-        <div class="sched-pass-tag">Pass 1 of 1</div>
+        <div class="sched-pass-tag">Pass 1 of 1 — Detective</div>
         <div class="sched-title">Detective</div>
-        <div class="sched-wardrobe">👔 Button-up, sleeves rolled, loosened tie</div>
+        <div class="sched-row">
+          <span class="sched-tag costume">👔 Button-up, sleeves rolled to elbow, tie loosened</span>
+          <span class="sched-tag camera">📷 Medium shot, slightly below eyeline, across table</span>
+          <span class="sched-tag props">📁 Folder to slam · closed laptop · swing lamp on</span>
+        </div>
+        <div class="sched-perf"><strong>Performance note</strong>Starts controlled and threatening, cracks at "You're not SURE?", full spiral on the markdown monologue, lands quiet on "It's always Reddit." Nail the folder slam — do it for real, get it on the first take so it looks natural.</div>
       </div>
     </div>
 
-    <div class="sched-change">remove tie · keep button-up · reframe camera for talking heads</div>
+    <div class="sched-change">✂ Remove tie, keep button-up. Kill dramatic lighting, bring up general light. Reframe camera to neutral talking-heads position. No set change needed — 10 min.</div>
 
     <!-- SCRIPT 1 -->
-    <div class="sched-script-divider">Script 1 — AEO vs SEO Expert</div>
+    <div class="sched-script-divider">Script 1 — AEO vs SEO Expert · 2 passes</div>
 
     <div class="sched-block">
-      <div class="sched-time-col"><div class="sched-time">9:55</div><div class="sched-duration">20 min</div></div>
+      <div class="sched-time-col"><div class="sched-time">10:05</div><div class="sched-duration">25 min</div></div>
       <div class="sched-content">
-        <div class="sched-pass-tag">Pass 1 of 2</div>
+        <div class="sched-pass-tag">Pass 1 of 2 — SEO Expert</div>
         <div class="sched-title">SEO Expert</div>
-        <div class="sched-wardrobe">👔 Button-up (same shirt, no tie)</div>
+        <div class="sched-row">
+          <span class="sched-tag costume">👔 Same button-up, no tie, slightly tired look</span>
+          <span class="sched-tag camera">📷 Medium shot, straight on, neutral background</span>
+        </div>
+        <div class="sched-perf"><strong>Performance note</strong>The comedy is entirely in the reaction — constantly being cut off mid-sentence. Lean into the growing exasperation. The final "…perfect." needs to be completely hollow and dead-eyed. Deliver all lines even the cut-off ones in full so the editor has options.</div>
       </div>
     </div>
 
-    <div class="sched-change">costume change · hoodie + lanyard</div>
+    <div class="sched-change">✂ Change into hoodie or patterned shirt + lanyard. Reframe camera to same position but slightly different angle or crop — they need to look like two different people. 10 min.</div>
 
     <div class="sched-block">
-      <div class="sched-time-col"><div class="sched-time">10:20</div><div class="sched-duration">20 min</div></div>
+      <div class="sched-time-col"><div class="sched-time">10:40</div><div class="sched-duration">25 min</div></div>
       <div class="sched-content">
-        <div class="sched-pass-tag">Pass 2 of 2</div>
+        <div class="sched-pass-tag">Pass 2 of 2 — AEO Expert</div>
         <div class="sched-title">AEO Expert</div>
-        <div class="sched-wardrobe">👕 Hoodie or patterned shirt + lanyard</div>
+        <div class="sched-row">
+          <span class="sched-tag costume">👕 Hoodie or patterned shirt + lanyard</span>
+          <span class="sched-tag camera">📷 Same medium shot, reframed slightly — different crop in edit</span>
+        </div>
+        <div class="sched-perf"><strong>Performance note</strong>Completely unhinged enthusiasm. No self-awareness whatsoever. Deliver every line like it's obvious and the SEO Expert is the one being difficult. "If we do this right, users won't even need to visit the site" should land like a genuine triumph.</div>
       </div>
     </div>
 
-    <div class="sched-change">set up chairs circle · hang banner · snack table · keep casual outfit</div>
+    <div class="sched-change">✂ Keep casual outfit — Facilitator wears similar. Move to chairs circle area. Set up: arrange chairs in circle, hang AEO ANONYMOUS banner, place snack table. 15 min.</div>
 
     <!-- SCRIPT 5 -->
-    <div class="sched-script-divider">Script 5 — AEO Anonymous</div>
+    <div class="sched-script-divider">Script 5 — AEO Anonymous · 3 passes</div>
 
     <div class="sched-block">
-      <div class="sched-time-col"><div class="sched-time">10:45</div><div class="sched-duration">20 min</div></div>
+      <div class="sched-time-col"><div class="sched-time">11:20</div><div class="sched-duration">25 min</div></div>
       <div class="sched-content">
-        <div class="sched-pass-tag">Pass 1 of 3</div>
+        <div class="sched-pass-tag">Pass 1 of 3 — Facilitator</div>
         <div class="sched-title">Facilitator</div>
-        <div class="sched-wardrobe">👕 Casual worn-in layers (fleece or hoodie)</div>
+        <div class="sched-row">
+          <span class="sched-tag costume">👕 Casual worn-in fleece or hoodie (same or swap)</span>
+          <span class="sched-tag camera">📷 Medium shot, seated in circle, slightly central — leading the room</span>
+          <span class="sched-tag props">☕ Styrofoam cup in hand throughout</span>
+        </div>
+        <div class="sched-perf"><strong>Performance note</strong>Calm, resigned, been-here-a-thousand-times energy. The big moment is "There's no trick" — deliver it gently, not as a revelation, as something they've said before and hate saying again. "We don't say that here" is the comedy payoff — eyes closed, pained.</div>
       </div>
     </div>
 
-    <div class="sched-change">costume change · business casual</div>
+    <div class="sched-change">✂ Change to business casual. Reframe camera to a seated chair position in the circle — a "member" seat. 8 min.</div>
 
     <div class="sched-block">
-      <div class="sched-time-col"><div class="sched-time">11:10</div><div class="sched-duration">20 min</div></div>
+      <div class="sched-time-col"><div class="sched-time">11:53</div><div class="sched-duration">25 min</div></div>
       <div class="sched-content">
-        <div class="sched-pass-tag">Pass 2 of 3</div>
-        <div class="sched-title">Members</div>
-        <div class="sched-wardrobe">👔 Business casual (film each member look separately if needed)</div>
+        <div class="sched-pass-tag">Pass 2 of 3 — Members</div>
+        <div class="sched-title">Members 1, 2 & 3</div>
+        <div class="sched-row">
+          <span class="sched-tag costume">👔 Business casual — vary slightly between members (swap jacket, untuck shirt)</span>
+          <span class="sched-tag camera">📷 Film each member from their chair position — reframe between each</span>
+        </div>
+        <div class="sched-perf"><strong>Performance note</strong>Film all three member speeches in this pass, adjusting costume slightly between each. Member 1: defeated and genuinely confused. Member 2: slightly embarrassed. Member 3: completely dissociated, stares forward, barely there. Each one is a different flavour of broken.</div>
       </div>
     </div>
 
-    <div class="sched-change">costume change · regular clothes</div>
+    <div class="sched-change">✂ Change to plain regular clothes. Reframe to the door position — New Guy is peeking in. 5 min.</div>
 
     <div class="sched-block">
-      <div class="sched-time-col"><div class="sched-time">11:35</div><div class="sched-duration">15 min</div></div>
+      <div class="sched-time-col"><div class="sched-time">12:23</div><div class="sched-duration">10 min</div></div>
       <div class="sched-content">
-        <div class="sched-pass-tag">Pass 3 of 3</div>
+        <div class="sched-pass-tag">Pass 3 of 3 — New Guy</div>
         <div class="sched-title">New Guy</div>
-        <div class="sched-wardrobe">👕 Regular clothes, no costume</div>
+        <div class="sched-row">
+          <span class="sched-tag costume">👕 Plain regular clothes, no styling</span>
+          <span class="sched-tag camera">📷 Frame from door threshold — head poking in, uncertain</span>
+        </div>
+        <div class="sched-perf"><strong>Performance note</strong>Just one line but it needs to land. Hopeful, slightly embarrassed. Get 4-5 takes with different energy — some more nervous, some more relieved. The editor will pick the funniest read.</div>
       </div>
     </div>
 
     <!-- LUNCH -->
     <div class="sched-block">
-      <div class="sched-time-col"><div class="sched-time">12:00</div><div class="sched-duration">60 min</div></div>
+      <div class="sched-time-col"><div class="sched-time">12:35</div><div class="sched-duration">60 min</div></div>
       <div class="sched-content setup-block">
-        <div class="sched-title">Lunch</div>
-        <div class="sched-detail">Set up conference table, tarot cards, crystal ball during break</div>
+        <div class="sched-title">Lunch + Set Change</div>
+        <div class="sched-detail">Eat first, then use remaining time to build the Oracle set. Conference table centre frame, candles arranged on table (if using), tarot cards shuffled and ready, crystal ball positioned. Frame camera: dramatic angle, low and slightly atmospheric. Test if candlelight is enough or supplement with a practical lamp. This is the most elaborate set — give it the full lunch window.</div>
       </div>
     </div>
 
     <!-- SCRIPT 2 -->
-    <div class="sched-script-divider">Script 2 — The Oracle</div>
+    <div class="sched-script-divider">Script 2 — The Oracle · 2 passes</div>
 
     <div class="sched-block">
-      <div class="sched-time-col"><div class="sched-time">13:00</div><div class="sched-duration">20 min</div></div>
+      <div class="sched-time-col"><div class="sched-time">13:35</div><div class="sched-duration">30 min</div></div>
       <div class="sched-content">
-        <div class="sched-pass-tag">Pass 1 of 2</div>
-        <div class="sched-title">Oracle</div>
-        <div class="sched-wardrobe">🧥 Dark cowl or draped robe</div>
+        <div class="sched-pass-tag">Pass 1 of 2 — Oracle</div>
+        <div class="sched-title">The Oracle</div>
+        <div class="sched-row">
+          <span class="sched-tag costume">🧥 Dark cowl or draped robe</span>
+          <span class="sched-tag camera">📷 Slightly low angle across table — dramatic, atmospheric</span>
+          <span class="sched-tag props">🃏 Tarot cards to shuffle + slam · crystal ball to peer into</span>
+        </div>
+        <div class="sched-perf"><strong>Performance note</strong>Eyes closed on the opening. Total commitment to the mystical bit — no winking at the camera. Each card reveal should feel like a genuine vision. The Tower gasp should be real. The crystal ball ending: stay in it, hold the gaze longer than feels comfortable. Unbothered by the client walking out.</div>
       </div>
     </div>
 
-    <div class="sched-change">costume change · blazer (carry into Script 3)</div>
+    <div class="sched-change">✂ Change out of robe into blazer. Reframe camera to the opposite side of the table — client POV. Place notebook and pen at the seat. 10 min.</div>
 
     <div class="sched-block">
-      <div class="sched-time-col"><div class="sched-time">13:25</div><div class="sched-duration">20 min</div></div>
+      <div class="sched-time-col"><div class="sched-time">14:15</div><div class="sched-duration">25 min</div></div>
       <div class="sched-content">
-        <div class="sched-pass-tag">Pass 2 of 2</div>
-        <div class="sched-title">Client</div>
-        <div class="sched-wardrobe">🧥 Blazer + notebook</div>
+        <div class="sched-pass-tag">Pass 2 of 2 — Client</div>
+        <div class="sched-title">The Client</div>
+        <div class="sched-row">
+          <span class="sched-tag costume">🧥 Blazer — keep this for Script 3 Therapist</span>
+          <span class="sched-tag camera">📷 Opposite side — client facing Oracle position</span>
+          <span class="sched-tag props">📓 Notebook open, pen in hand, actively writing</span>
+        </div>
+        <div class="sched-perf"><strong>Performance note</strong>Starts skeptical executive, slowly losing the plot. The note-taking of "Wheel… turns…" is the key comedy beat — play it completely straight, as if this is a normal thing to write down. The "OKAY. THAT'S IT." exit needs energy — stand up, don't mutter it.</div>
       </div>
     </div>
 
-    <div class="sched-change">set up couch/chairs · keep blazer for Therapist</div>
+    <div class="sched-change">✂ Keep the blazer — it becomes the Therapist jacket. Move to therapy set: couch/chairs positioned, clipboard ready. Reframe camera to therapy room angle. 15 min.</div>
 
     <!-- SCRIPT 3 -->
-    <div class="sched-script-divider">Script 3 — Couple Therapy</div>
+    <div class="sched-script-divider">Script 3 — Couple Therapy · 3 passes</div>
 
     <div class="sched-block">
-      <div class="sched-time-col"><div class="sched-time">13:50</div><div class="sched-duration">20 min</div></div>
+      <div class="sched-time-col"><div class="sched-time">14:55</div><div class="sched-duration">25 min</div></div>
       <div class="sched-content">
-        <div class="sched-pass-tag">Pass 1 of 3</div>
+        <div class="sched-pass-tag">Pass 1 of 3 — Therapist</div>
         <div class="sched-title">Therapist</div>
-        <div class="sched-wardrobe">🧥 Soft blazer or cardigan (same blazer from Client)</div>
+        <div class="sched-row">
+          <span class="sched-tag costume">🧥 Blazer or soft cardigan — same blazer from Client works</span>
+          <span class="sched-tag camera">📷 Slightly elevated, observational — separate chair facing the couch</span>
+          <span class="sched-tag props">📋 Clipboard, pen — actively writing throughout</span>
+        </div>
+        <div class="sched-perf"><strong>Performance note</strong>Neutral and measured the whole way through. The comedy is that they never lose composure. The devastating line — "I don't think your problem is ChatGPT. I think you've never been mentioned anywhere else." — deliver it gently, almost kindly. "Cash or credit?" at the end: completely normal, no irony.</div>
       </div>
     </div>
 
-    <div class="sched-change">costume change · logo tee</div>
+    <div class="sched-change">✂ Change into company logo t-shirt. Reframe to couch position — The Brand sits on the couch, emotionally raw. 8 min.</div>
 
     <div class="sched-block">
-      <div class="sched-time-col"><div class="sched-time">14:15</div><div class="sched-duration">20 min</div></div>
+      <div class="sched-time-col"><div class="sched-time">15:28</div><div class="sched-duration">25 min</div></div>
       <div class="sched-content">
-        <div class="sched-pass-tag">Pass 2 of 3</div>
+        <div class="sched-pass-tag">Pass 2 of 3 — The Brand</div>
         <div class="sched-title">The Brand</div>
-        <div class="sched-wardrobe">👕 Company logo t-shirt</div>
+        <div class="sched-row">
+          <span class="sched-tag costume">👕 Company logo t-shirt</span>
+          <span class="sched-tag camera">📷 Couch position — medium shot, emotionally present</span>
+        </div>
+        <div class="sched-perf"><strong>Performance note</strong>Tense and guarded at the start, escalating through the session. "ONLY MY OWN WEBSITE, yes, I HEARD him" — don't play it too big, the restraint makes it funnier. The final "WOW." exit: stand up, dignified outrage, no slamming anything. The comedy is in how composed the breakdown is.</div>
       </div>
     </div>
 
-    <div class="sched-change">costume change · all gray / neutral</div>
+    <div class="sched-change">✂ Change into all-gray / plain neutral outfit. Reframe to couch — same position as Brand but body language completely still. 8 min.</div>
 
     <div class="sched-block">
-      <div class="sched-time-col"><div class="sched-time">14:40</div><div class="sched-duration">20 min</div></div>
+      <div class="sched-time-col"><div class="sched-time">16:01</div><div class="sched-duration">25 min</div></div>
       <div class="sched-content">
-        <div class="sched-pass-tag">Pass 3 of 3</div>
+        <div class="sched-pass-tag">Pass 3 of 3 — ChatGPT</div>
         <div class="sched-title">ChatGPT</div>
-        <div class="sched-wardrobe">🩶 All-gray or plain neutral outfit</div>
+        <div class="sched-row">
+          <span class="sched-tag costume">🩶 All-gray or plain neutral — eerily clean</span>
+          <span class="sched-tag camera">📷 Same couch position — completely still, upright posture</span>
+        </div>
+        <div class="sched-perf"><strong>Performance note</strong>Absolutely no emotional register — not robotic, just pleasantly flat. Every line is helpful and well-meaning and completely wrong. "Their competitor has a wonderful blog." is the payoff — deliver it with genuine warmth, zero awareness of what it's doing to the room. Do not blink excessively or play it too weird.</div>
       </div>
     </div>
 
     <!-- WRAP -->
     <div class="sched-block">
-      <div class="sched-time-col"><div class="sched-time">15:05</div><div class="sched-duration">55 min</div></div>
+      <div class="sched-time-col"><div class="sched-time">16:30</div><div class="sched-duration">30 min</div></div>
       <div class="sched-content setup-block">
-        <div class="sched-title">Pickups & Buffer</div>
-        <div class="sched-detail">Any reshoots, alternative takes, pack down — done by 16:00</div>
+        <div class="sched-title">Pickups & Wrap</div>
+        <div class="sched-detail">Revisit any lines that didn't land, grab alternative deliveries on key jokes, check playback on anything uncertain. Pack down. Target wrap by 17:00.</div>
       </div>
     </div>
 
