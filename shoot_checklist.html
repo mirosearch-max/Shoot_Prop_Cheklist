@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shoot Day Checklist</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f5f5f0;
+      color: #1a1a1a;
+      padding: 40px 20px;
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: #888;
+      margin-bottom: 36px;
+    }
+
+    .script-block {
+      background: #fff;
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+
+    .script-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .script-title {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .script-subtitle {
+      font-size: 0.78rem;
+      color: #aaa;
+      margin-top: 2px;
+    }
+
+    .progress-pill {
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: #f0f0ee;
+      border-radius: 999px;
+      padding: 4px 12px;
+      color: #888;
+      white-space: nowrap;
+    }
+
+    .progress-pill.done {
+      background: #e6f4ea;
+      color: #2e7d32;
+    }
+
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #bbb;
+      margin: 14px 0 6px;
+      padding-left: 30px;
+    }
+
+    .section-label:first-of-type { margin-top: 0; }
+
+    /* Column header row */
+    .col-headers {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 0 6px 30px;
+      border-bottom: 1px solid #f0f0ee;
+      margin-bottom: 4px;
+    }
+    .col-headers:first-of-type { margin-top: 0; }
+    .col-h-item { flex: 1; font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: #ccc; }
+    .col-h-link { width: 160px; min-width: 160px; font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: #ccc; }
+
+    /* Item row */
+    .item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 4px;
+      border-radius: 6px;
+      transition: background 0.1s;
+    }
+
+    .item:hover { background: #fafaf8; }
+
+    /* Checkbox */
+    .check-box {
+      width: 18px;
+      height: 18px;
+      min-width: 18px;
+      border: 2px solid #ddd;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+      background: #fff;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .item.checked .check-box {
+      background: #1a1a1a;
+      border-color: #1a1a1a;
+    }
+
+    .check-box svg { display: none; }
+    .item.checked .check-box svg { display: block; }
+
+    /* Editable label */
+    .item-label {
+      flex: 1;
+      font-size: 0.88rem;
+      line-height: 1.4;
+      color: #222;
+      outline: none;
+      border-radius: 4px;
+      padding: 2px 5px;
+      min-width: 0;
+      cursor: text;
+      transition: color 0.15s, background 0.1s;
+    }
+
+    .item-label:focus {
+      background: #f5f5f0;
+      box-shadow: 0 0 0 2px #e0e0dc;
+    }
+
+    .item.checked .item-label {
+      color: #bbb;
+      text-decoration: line-through;
+    }
+
+    /* Link column */
+    .link-col {
+      width: 160px;
+      min-width: 160px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .link-input {
+      flex: 1;
+      font-size: 0.78rem;
+      border: 1px solid #e8e8e4;
+      border-radius: 6px;
+      padding: 4px 8px;
+      color: #555;
+      background: #fafaf8;
+      outline: none;
+      min-width: 0;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .link-input::placeholder { color: #ccc; }
+
+    .link-input:focus {
+      border-color: #bbb;
+      background: #fff;
+    }
+
+    .link-input.has-link {
+      display: none;
+    }
+
+    .link-go {
+      display: none;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.78rem;
+      color: #4a7ef5;
+      text-decoration: none;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 110px;
+      flex-shrink: 0;
+    }
+
+    .link-go.visible { display: flex; }
+
+    .link-go svg { flex-shrink: 0; }
+
+    .link-edit-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #ccc;
+      padding: 2px;
+      display: none;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+
+    .link-edit-btn:hover { color: #888; }
+    .link-go.visible ~ .link-edit-btn { display: block; }
+
+    .divider {
+      height: 1px;
+      background: #f0f0ee;
+      margin: 10px 0;
+    }
+
+    .global-actions {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+
+    .global-btn {
+      background: #1a1a1a;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 18px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    .global-btn:hover { opacity: 0.8; }
+
+    .global-btn.outline {
+      background: none;
+      color: #666;
+      border: 1px solid #ddd;
+      font-weight: 400;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Shoot Day Checklist</h1>
+  <p class="subtitle">5 scripts · props & wardrobe</p>
+
+  <div class="global-actions">
+    <button class="global-btn" onclick="checkAll()">Check all</button>
+    <button class="global-btn outline" onclick="resetAll()">Reset all</button>
+  </div>
+
+  <!-- SCRIPT 1 -->
+  <div class="script-block" id="script-1">
+    <div class="script-header">
+      <div>
+        <div class="script-title">Script 1 — AEO vs SEO Expert</div>
+        <div class="script-subtitle">Talking heads format</div>
+      </div>
+      <div class="progress-pill" id="pill-1">0 / 4</div>
+    </div>
+
+    <div class="section-label">Wardrobe</div>
+    <div class="col-headers"><span class="col-h-item">Item</span><span class="col-h-link">Link / Reference</span></div>
+    <div class="item">
+      <div class="check-box" onclick="toggleCheck(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="item-label" contenteditable="true">AEO Expert — hoodie or patterned shirt</span>
+      <div class="link-col"></div>
+    </div>
+    <div class="item">
+      <div class="check-box" onclick="toggleCheck(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="item-label" contenteditable="true">AEO Expert — lanyard</span>
+      <div class="link-col"></div>
+    </div>
+    <div class="item">
+      <div class="check-box" onclick="toggleCheck(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="item-label" contenteditable="true">SEO Expert — button-up shirt</span>
+      <div class="link-col"></div>
+    </div>
+    <div class="item">
+      <div class="check-box" onclick="toggleCheck(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="item-label" contenteditable="true">SEO Expert — glasses (optional)</span>
+      <div class="link-col"></div>
+    </div>
+  </div>
+
+  <!-- SCRIPT 2 -->
+  <div class="script-block" id="script-2">
+    <div class="script-header">
+      <div>
+        <div class="script-title">Script 2 — The Oracle</div>
+        <div class="script-subtitle">Conference room · candles · tarot</div>
+      </div>
+      <div class="progress-pill" id="pill-2">0 / 9</div>
+    </div>
+
+    <div class="section-label">Props</div>
+    <div class="col-headers"><span class="col-h-item">Item</span><span class="col-h-link">Link / Reference</span></div>
+    <div class="item">
+      <div class="check-box" onclick="toggleCheck(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="item-label" contenteditable="true">Tarot card — The Wheel of Fortune</span>
+      <div class="link-col"></div>
+    </div>
+    <div class="item">
+      <div class="check-box" onclick="toggleCheck(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="item-label" contenteditable="true">Tarot card — The Tower</span>
+      <div class="link-col"></div>
+    </div>
+    <div class="item">
+      <div class="check-box" onclick="toggleCheck(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="item-label" contenteditable="true">Tarot card — Death</span>
+      <div class="link-col"></div>
+    </div>
+    <div class="item">
+      <div class="check-box" onclick="toggleCheck(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="item-label" contenteditable="true">Candles (multiple, for table)</span>
+      <div class="link-col"></div>
+    </div>
+    <div class="item">
+      <div class="check-box" onclick="toggleCheck(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="item-label" contenteditable="true">Crystal ball</span>
+      <div class="link-col"></div>
+    </div>
+    <div class="item">
+      <div class="check-box" onclick="toggleCheck(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="item-label" contenteditable="true">Conference table</span>
+      <div class="link-col"></div>
+    </div>
+    <div class="item">
+      <div class="check-box" onclick="toggleCheck(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="item-label" contenteditable="true">Notebook + pen (client)</span>
+      <div class="link-col"></div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section-label">Wardrobe</div>
+    <div class="col-headers"><span class="col-h-item">Item</span><span class="col-h-link">Link / Reference</span></div>
+    <div class="item">
+      <div class="check-box" onclick="toggleCheck(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="item-label" contenteditable="true">Oracle — dark cowl or draped robe</span>
+      <div class="link-col"></div>
+    </div>
+    <div class="item">
+      <div class="check-box" onclick="toggleCheck(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="item-label" contenteditable="true">Client — blazer</span>
+      <div class="link-col"></div>
+    </div>
+  </div>
+
+  <!-- SCRIPT 3 -->
+  <div class="script-block" id="script-3">
+    <div class="script-header">
+      <div>
+        <div class="script-title">Script 3 — Couple Therapy</div>
+        <div class="script-subtitle">Couch · clipboard · three characters</div>
+      </div>
+      <div class="progress-pill" id="pill-3">0 / 7</div>
+    </div>
+
+    <div class="section-label">Props</div>
+    <div class="col-headers"><span class="col-h-item">Item</span><span class="col-h-link">Link / Reference</span></div>
+    <div class="item">
+      <div class="check-box" onclick="toggleCheck(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="item-label" contenteditable="true">Couch or two chairs side by side</span>
+      <div class="link-col"></div>
+    </div>
+    <div class="item">
+      <div class="check-box" onclick="toggleCheck(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="item-label" contenteditable="true">Clipboard</span>
+      <div class="link-col"></div>
+    </div>
+    <div class="item">
+      <div class="check-box" onclick="toggleCheck(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="item-label" contenteditable="true">Tissue box (optional)</span>
+      <div class="link-col"></div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section-label">Wardrobe</div>
+    <div class="col-headers"><span class="col-h-item">Item</span><span class="col-h-link">Link / Reference</span></div>
+    <div class="item">
+      <div class="check-box" onclick="toggleCheck(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="item-label" contenteditable="true">Therapist — soft blazer or cardigan, neutral tones</span>
+      <div class="link-col"></div>
+    </div>
+    <div class="item">
+      <div class="check-box" onclick="toggleCheck(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="item-label" contenteditable="true">Brand — company logo t-shirt</span>
+      <div class="link-col"></div>
+    </div>
+    <div class="item">
+      <div class="check-box" onclick="toggleCheck(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="item-label" contenteditable="true">ChatGPT — all-gray or plain neutral outfit</span>
+      <div class="link-col"></div>
+    </div>
+    <div class="item">
+      <div class="check-box" onclick="toggleCheck(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="item-label" contenteditable="true">Therapist chair (separate from couch)</span>
+      <div class="link-col"></div>
+    </div>
+  </div>
+
+  <!-- SCRIPT 4 -->
+  <div class="script-block" id="script-4">
+    <div class="script-header">
+      <div>
+        <div class="script-title">Script 4 — Interrogation</div>
+        <div class="script-subtitle">Dark room · one light · laptop suspect</div>
+      </div>
+      <div class="progress-pill" id="pill-4">0 / 5</div>
+    </div>
+
+    <div class="section-label">Props</div>
+    <div class="col-headers"><span class="col-h-item">Item</span><span class="col-h-link">Link / Reference</span></div>
+    <div class="item">
+      <div class="check-box" onclick="toggleCheck(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="item-label" contenteditable="true">Plain table (metal-look preferred)</span>
+      <div class="link-col"></div>
+    </div>
+    <div class="item">
+      <div class="check-box" onclick="toggleCheck(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="item-label" contenteditable="true">Directional desk lamp or clip light (to swing overhead)</span>
+      <div class="link-col"></div>
+    </div>
+    <div class="item">
+      <div class="check-box" onclick="toggleCheck(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="item-label" contenteditable="true">Manila folder (to slam on table)</span>
+      <div class="link-col"></div>
+    </div>
+    <div class="item">
+      <div class="check-box" onclick="toggleCheck(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="item-label" contenteditable="true">Laptop (closed, on table — label as ChatGPT if needed)</span>
+      <div class="link-col"></div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section-label">Wardrobe</div>
+    <div class="col-headers"><span class="col-h-item">Item</span><span class="col-h-link">Link / Reference</span></div>
+    <div class="item">
+      <div class="check-box" onclick="toggleCheck(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="item-label" contenteditable="true">Detective — button-up shirt, sleeves rolled up, loosened tie</span>
+      <div class="link-col"></div>
+    </div>
+  </div>
+
+  <!-- SCRIPT 5 -->
+  <div class="script-block" id="script-5">
+    <div class="script-header">
+      <div>
+        <div class="script-title">Script 5 — AEO Anonymous</div>
+        <div class="script-subtitle">Circle of chairs · support group vibes</div>
+      </div>
+      <div class="progress-pill" id="pill-5">0 / 8</div>
+    </div>
+
+    <div class="section-label">Props</div>
+    <div class="col-headers"><span class="col-h-item">Item</span><span class="col-h-link">Link / Reference</span></div>
+    <div class="item">
+      <div class="check-box" onclick="toggleCheck(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="item-label" contenteditable="true">Folding chairs (enough for full circle)</span>
+      <div class="link-col"></div>
+    </div>
+    <div class="item">
+      <div class="check-box" onclick="toggleCheck(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="item-label" contenteditable="true">Handmade banner — "AEO ANONYMOUS"</span>
+      <div class="link-col"></div>
+    </div>
+    <div class="item">
+      <div class="check-box" onclick="toggleCheck(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="item-label" contenteditable="true">Styrofoam cup (facilitator)</span>
+      <div class="link-col"></div>
+    </div>
+    <div class="item">
+      <div class="check-box" onclick="toggleCheck(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="item-label" contenteditable="true">Small table with sad snacks (donuts / cookies)</span>
+      <div class="link-col"></div>
+    </div>
+    <div class="item">
+      <div class="check-box" onclick="toggleCheck(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="item-label" contenteditable="true">Cold/fluorescent overhead lighting (or practical lamp)</span>
+      <div class="link-col"></div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section-label">Wardrobe</div>
+    <div class="col-headers"><span class="col-h-item">Item</span><span class="col-h-link">Link / Reference</span></div>
+    <div class="item">
+      <div class="check-box" onclick="toggleCheck(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="item-label" contenteditable="true">Facilitator — casual worn-in layers (fleece or hoodie)</span>
+      <div class="link-col"></div>
+    </div>
+    <div class="item">
+      <div class="check-box" onclick="toggleCheck(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="item-label" contenteditable="true">Members — varied business casual (hoodie, shirt, etc.)</span>
+      <div class="link-col"></div>
+    </div>
+    <div class="item">
+      <div class="check-box" onclick="toggleCheck(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="item-label" contenteditable="true">New Guy — regular clothes, no costume needed</span>
+      <div class="link-col"></div>
+    </div>
+  </div>
+
+  <script>
+    // Build link inputs for every .link-col
+    document.querySelectorAll('.link-col').forEach(col => {
+      col.innerHTML = `
+        <input class="link-input" type="url" placeholder="Paste link..." />
+        <a class="link-go" href="#" target="_blank" rel="noopener">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H5M10 2V7" stroke="#4a7ef5" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Open
+        </a>
+        <button class="link-edit-btn" title="Edit link">
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1 9.5L3.5 9L9.5 3C9.78 2.72 9.78 2.28 9.5 2L9 1.5C8.72 1.22 8.28 1.22 8 1.5L2 7.5L1 9.5Z" stroke="#aaa" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      `;
+
+      const input = col.querySelector('.link-input');
+      const linkGo = col.querySelector('.link-go');
+      const editBtn = col.querySelector('.link-edit-btn');
+
+      function applyLink(url) {
+        if (url && url.trim()) {
+          const full = url.startsWith('http') ? url : 'https://' + url;
+          linkGo.href = full;
+          linkGo.classList.add('visible');
+          input.classList.add('has-link');
+        } else {
+          linkGo.classList.remove('visible');
+          input.classList.remove('has-link');
+        }
+        saveState();
+      }
+
+      input.addEventListener('blur', () => applyLink(input.value));
+      input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); input.blur(); } });
+
+      editBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        linkGo.classList.remove('visible');
+        input.classList.remove('has-link');
+        input.focus();
+        input.select();
+      });
+    });
+
+    // Toggle checkbox
+    function toggleCheck(checkBox) {
+      const item = checkBox.closest('.item');
+      item.classList.toggle('checked');
+      const block = item.closest('.script-block');
+      const id = block.id.split('-')[1];
+      updatePill(id);
+      saveState();
+    }
+
+    function updatePill(scriptNum) {
+      const block = document.getElementById('script-' + scriptNum);
+      const items = block.querySelectorAll('.item');
+      const checked = block.querySelectorAll('.item.checked').length;
+      const pill = document.getElementById('pill-' + scriptNum);
+      pill.textContent = checked + ' / ' + items.length;
+      pill.className = 'progress-pill' + (checked === items.length ? ' done' : '');
+    }
+
+    function checkAll() {
+      document.querySelectorAll('.item').forEach(i => i.classList.add('checked'));
+      [1,2,3,4,5].forEach(updatePill);
+      saveState();
+    }
+
+    function resetAll() {
+      document.querySelectorAll('.item').forEach(i => i.classList.remove('checked'));
+      [1,2,3,4,5].forEach(updatePill);
+      saveState();
+    }
+
+    // Prevent check toggle when clicking inside editable label
+    document.querySelectorAll('.item-label').forEach(label => {
+      label.addEventListener('click', e => e.stopPropagation());
+      label.addEventListener('input', () => saveState());
+    });
+
+    function saveState() {
+      const state = [];
+      document.querySelectorAll('.item').forEach(item => {
+        const label = item.querySelector('.item-label');
+        const input = item.querySelector('.link-input');
+        state.push({
+          checked: item.classList.contains('checked'),
+          label: label ? label.textContent : '',
+          link: input ? input.value : ''
+        });
+      });
+      try { localStorage.setItem('shoot_checklist_v2', JSON.stringify(state)); } catch(e) {}
+    }
+
+    function loadState() {
+      try {
+        const state = JSON.parse(localStorage.getItem('shoot_checklist_v2') || '[]');
+        const items = document.querySelectorAll('.item');
+        state.forEach((s, i) => {
+          if (!items[i]) return;
+          if (s.checked) items[i].classList.add('checked');
+          const label = items[i].querySelector('.item-label');
+          if (label && s.label) label.textContent = s.label;
+          const input = items[i].querySelector('.link-input');
+          const linkGo = items[i].querySelector('.link-go');
+          if (input && s.link) {
+            input.value = s.link;
+            const full = s.link.startsWith('http') ? s.link : 'https://' + s.link;
+            linkGo.href = full;
+            linkGo.classList.add('visible');
+            input.classList.add('has-link');
+          }
+        });
+      } catch(e) {}
+      [1,2,3,4,5].forEach(updatePill);
+    }
+
+    loadState();
+  </script>
+</body>
+</html>
