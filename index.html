@@ -631,6 +631,7 @@
   <div id="view-checklist">
   <div class="global-actions">
     <button class="global-btn" onclick="checkAll()">Check all</button>
+    <button class="global-btn" onclick="saveToDisk()" title="Save all changes back to this file">💾 Save</button>
     <button class="global-btn outline" onclick="resetAll()">Reset all</button>
   </div>
 
@@ -1096,7 +1097,10 @@
   </div><!-- end view-schedule -->
 
   <script>
-    // Build link inputs for every .link-col
+    // ── Baked-in state (written here by saveToDisk) ──────────────────────────
+    const BAKED_STATE = null;
+
+    // ── Build link inputs ────────────────────────────────────────────────────
     document.querySelectorAll('.link-col').forEach(col => {
       col.innerHTML = `
         <input class="link-input" type="url" placeholder="Paste link..." />
@@ -1113,7 +1117,7 @@
       const linkGo = col.querySelector('.link-go');
       const editBtn = col.querySelector('.link-edit-btn');
 
-      function applyLink(url) {
+      function applyLink(url, silent) {
         if (url && url.trim()) {
           const full = url.startsWith('http') ? url : 'https://' + url;
           linkGo.href = full;
@@ -1123,9 +1127,10 @@
           linkGo.classList.remove('visible');
           input.classList.remove('has-link');
         }
-        saveState();
+        if (!silent) saveState();
       }
 
+      input._applyLink = applyLink;
       input.addEventListener('blur', () => applyLink(input.value));
       input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); input.blur(); } });
 
@@ -1138,7 +1143,7 @@
       });
     });
 
-    // Toggle checkbox
+    // ── Toggle checkbox ──────────────────────────────────────────────────────
     function toggleCheck(checkBox) {
       const item = checkBox.closest('.item');
       item.classList.toggle('checked');
@@ -1150,22 +1155,26 @@
 
     function updatePill(scriptNum) {
       const block = document.getElementById('script-' + scriptNum);
+      if (!block) return;
       const items = block.querySelectorAll('.item');
       const checked = block.querySelectorAll('.item.checked').length;
       const pill = document.getElementById('pill-' + scriptNum);
+      if (!pill) return;
       pill.textContent = checked + ' / ' + items.length;
       pill.className = 'progress-pill' + (checked === items.length ? ' done' : '');
     }
 
+    const ALL_SCRIPTS = [1,2,3,4,5,6];
+
     function checkAll() {
       document.querySelectorAll('.item').forEach(i => i.classList.add('checked'));
-      [1,2,3,4,5].forEach(updatePill);
+      ALL_SCRIPTS.forEach(updatePill);
       saveState();
     }
 
     function resetAll() {
       document.querySelectorAll('.item').forEach(i => i.classList.remove('checked'));
-      [1,2,3,4,5].forEach(updatePill);
+      ALL_SCRIPTS.forEach(updatePill);
       saveState();
     }
 
@@ -1180,12 +1189,13 @@
       ta.addEventListener('input', () => saveState());
     });
 
-    function saveState() {
-      const state = [];
+    // ── State serialisation ──────────────────────────────────────────────────
+    function getState() {
+      const items = [];
       document.querySelectorAll('.item').forEach(item => {
         const label = item.querySelector('.item-label');
         const input = item.querySelector('.link-input');
-        state.push({
+        items.push({
           checked: item.classList.contains('checked'),
           label: label ? label.textContent : '',
           link: input ? input.value : ''
@@ -1193,37 +1203,96 @@
       });
       const notes = [];
       document.querySelectorAll('.notes-textarea').forEach(ta => notes.push(ta.value));
-      try {
-        localStorage.setItem('shoot_checklist_v2', JSON.stringify(state));
-        localStorage.setItem('shoot_checklist_notes', JSON.stringify(notes));
-      } catch(e) {}
+      return { items, notes };
+    }
+
+    function applyState(state) {
+      if (!state) return;
+      const domItems = document.querySelectorAll('.item');
+      (state.items || []).forEach((s, i) => {
+        if (!domItems[i]) return;
+        if (s.checked) domItems[i].classList.add('checked');
+        const label = domItems[i].querySelector('.item-label');
+        if (label && s.label) label.textContent = s.label;
+        const input = domItems[i].querySelector('.link-input');
+        if (input && s.link) {
+          input.value = s.link;
+          if (input._applyLink) input._applyLink(s.link, true);
+        }
+      });
+      document.querySelectorAll('.notes-textarea').forEach((ta, i) => {
+        if (state.notes && state.notes[i]) ta.value = state.notes[i];
+      });
+      ALL_SCRIPTS.forEach(updatePill);
+    }
+
+    function saveState() {
+      try { localStorage.setItem('shoot_checklist_v3', JSON.stringify(getState())); } catch(e) {}
     }
 
     function loadState() {
+      // Prefer baked-in state (set by saveToDisk), fall back to localStorage
+      if (BAKED_STATE) {
+        applyState(BAKED_STATE);
+        return;
+      }
       try {
-        const state = JSON.parse(localStorage.getItem('shoot_checklist_v2') || '[]');
-        const items = document.querySelectorAll('.item');
-        state.forEach((s, i) => {
-          if (!items[i]) return;
-          if (s.checked) items[i].classList.add('checked');
-          const label = items[i].querySelector('.item-label');
-          if (label && s.label) label.textContent = s.label;
-          const input = items[i].querySelector('.link-input');
-          const linkGo = items[i].querySelector('.link-go');
-          if (input && s.link) {
-            input.value = s.link;
-            const full = s.link.startsWith('http') ? s.link : 'https://' + s.link;
-            linkGo.href = full;
-            linkGo.classList.add('visible');
-            input.classList.add('has-link');
-          }
-        });
-        const notes = JSON.parse(localStorage.getItem('shoot_checklist_notes') || '[]');
-        document.querySelectorAll('.notes-textarea').forEach((ta, i) => {
-          if (notes[i]) ta.value = notes[i];
-        });
+        const raw = localStorage.getItem('shoot_checklist_v3');
+        if (raw) applyState(JSON.parse(raw));
       } catch(e) {}
-      [1,2,3,4,5].forEach(updatePill);
+      ALL_SCRIPTS.forEach(updatePill);
+    }
+
+    // ── Save to disk ─────────────────────────────────────────────────────────
+    let fileHandle = null;
+
+    async function saveToDisk() {
+      const state = getState();
+      const stateJson = JSON.stringify(state);
+
+      // Replace the BAKED_STATE line in the current HTML source
+      const currentHtml = document.documentElement.outerHTML;
+      const newHtml = currentHtml.replace(
+        /const BAKED_STATE = .*?;/,
+        `const BAKED_STATE = ${stateJson};`
+      );
+
+      try {
+        // File System Access API (Chrome / Edge) — writes directly to the open file
+        if (!fileHandle && window.showSaveFilePicker) {
+          fileHandle = await window.showSaveFilePicker({
+            suggestedName: 'shoot_checklist.html',
+            types: [{ description: 'HTML file', accept: { 'text/html': ['.html'] } }]
+          });
+        }
+        if (fileHandle) {
+          const writable = await fileHandle.createWritable();
+          await writable.write(newHtml);
+          await writable.close();
+          showSaveBadge('Saved ✓');
+          return;
+        }
+      } catch(e) {
+        if (e.name === 'AbortError') return; // user cancelled picker
+      }
+
+      // Fallback: download updated HTML file
+      const blob = new Blob([newHtml], { type: 'text/html' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'shoot_checklist.html';
+      a.click();
+      showSaveBadge('Downloaded ✓');
+    }
+
+    function showSaveBadge(msg) {
+      const btn = document.querySelector('[onclick="saveToDisk()"]');
+      if (!btn) return;
+      const prev = btn.textContent;
+      btn.textContent = msg;
+      btn.style.background = '#2a7a4a';
+      btn.style.color = '#fff';
+      setTimeout(() => { btn.textContent = '💾 Save'; btn.style.background = ''; btn.style.color = ''; }, 1800);
     }
 
     loadState();
