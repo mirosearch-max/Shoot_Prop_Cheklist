@@ -1160,14 +1160,15 @@
 
     // ── Save / load ──────────────────────────────────────────────────────────
     function save() {
-      const items = [], notes = [];
+      const items = [], notes = [], sched = [];
       document.querySelectorAll('.item').forEach(item => {
         const label = item.querySelector('.item-label');
         const input = item.querySelector('.link-input');
         items.push({ checked: item.classList.contains('checked'), label: label ? label.innerText : '', link: input ? input.value : '' });
       });
       document.querySelectorAll('.notes-textarea').forEach(ta => notes.push(ta.value));
-      try { localStorage.setItem(KEY, JSON.stringify({ items, notes })); } catch(e) {}
+      document.querySelectorAll('.sched-table td').forEach(td => sched.push(td.innerHTML));
+      try { localStorage.setItem(KEY, JSON.stringify({ items, notes, sched })); } catch(e) {}
     }
 
     function load() {
@@ -1187,6 +1188,10 @@
       document.querySelectorAll('.notes-textarea').forEach((ta, i) => {
         if (state.notes && state.notes[i] != null) ta.value = state.notes[i];
       });
+      const domCells = document.querySelectorAll('.sched-table td');
+      (state.sched || []).forEach((html, i) => {
+        if (domCells[i] && html != null) domCells[i].innerHTML = html;
+      });
       ALL_SCRIPTS.forEach(updatePill);
     }
 
@@ -1200,7 +1205,10 @@
     load();
 
     // ── Schedule tab ─────────────────────────────────────────────────────────
-    document.querySelectorAll('.sched-table td').forEach(td => td.setAttribute('contenteditable', 'true'));
+    document.querySelectorAll('.sched-table td').forEach(td => {
+      td.setAttribute('contenteditable', 'true');
+      td.addEventListener('input', save);
+    });
 
     function switchTab(tab) {
       document.getElementById('view-checklist').style.display = tab === 'checklist' ? 'block' : 'none';
